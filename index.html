@@ -1,0 +1,902 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{company}} | デザインリノベーション</title>
+  <meta name="description" content="デザインリノベーションサイトの静的再現ページ">
+  <link rel="preconnect" href="https://images.unsplash.com">
+  <script>
+    (function () {
+      try {
+        if (sessionStorage.getItem("demo-authenticated") !== "true") {
+          document.documentElement.classList.add("auth-locked");
+        }
+      } catch (error) {
+        document.documentElement.classList.add("auth-locked");
+      }
+    })();
+  </script>
+  <style>
+    :root {
+      --ink: #191817;
+      --paper: #f7f4ee;
+      --white: #fff;
+      --line: #d8d1c7;
+      --muted: #77716a;
+      --accent: #b62222;
+      --olive: #6f7868;
+      --taupe: #c8baaa;
+      --soft: #ece6dd;
+      --max: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+      line-height: 1.8;
+      letter-spacing: 0;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    .wrap { width: min(var(--max), calc(100% - 48px)); margin: 0 auto; }
+
+    .auth-locked body {
+      overflow: hidden;
+    }
+    .auth-locked body > :not(.password-gate) {
+      display: none !important;
+    }
+    .password-gate {
+      min-height: 100vh;
+      display: none;
+      place-items: center;
+      padding: 28px;
+      background:
+        linear-gradient(90deg, rgba(25,24,23,.78), rgba(25,24,23,.28)),
+        url("https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1800&q=85") center/cover;
+      color: var(--white);
+    }
+    .auth-locked .password-gate {
+      display: grid;
+    }
+    .password-card {
+      width: min(100%, 430px);
+      padding: 34px;
+      background: rgba(247, 244, 238, .96);
+      color: var(--ink);
+      border: 1px solid rgba(25, 24, 23, .14);
+      box-shadow: 0 24px 70px rgba(0, 0, 0, .28);
+    }
+    .password-card h1 {
+      margin: 0 0 10px;
+      font-size: 30px;
+      line-height: 1.15;
+    }
+    .password-card p {
+      margin: 0 0 22px;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .password-card label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+    .password-row {
+      display: grid;
+      grid-template-columns: 1fr 116px;
+      gap: 8px;
+    }
+    .password-row input {
+      min-width: 0;
+      height: 48px;
+      padding: 0 14px;
+      border: 1px solid var(--line);
+      background: var(--white);
+      color: var(--ink);
+      font: inherit;
+      font-weight: 700;
+    }
+    .password-row button {
+      border: 0;
+      background: var(--ink);
+      color: var(--white);
+      font: inherit;
+      font-size: 13px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .password-error {
+      min-height: 22px;
+      margin: 10px 0 0;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .site-header {
+      position: fixed;
+      z-index: 50;
+      inset: 0 0 auto;
+      height: 76px;
+      display: grid;
+      grid-template-columns: 230px 1fr 240px;
+      align-items: center;
+      background: rgba(247, 244, 238, .92);
+      border-bottom: 1px solid rgba(25, 24, 23, .08);
+      backdrop-filter: blur(14px);
+    }
+    .brand {
+      height: 100%;
+      display: grid;
+      place-items: center;
+      border-right: 1px solid var(--line);
+      font-weight: 800;
+      font-size: 28px;
+      line-height: 1;
+    }
+    .brand small {
+      display: block;
+      margin-top: 6px;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+    .global-nav {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+    .header-actions {
+      height: 100%;
+      display: grid;
+      grid-template-columns: 1fr 76px;
+      border-left: 1px solid var(--line);
+      text-align: center;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .tel {
+      display: grid;
+      place-items: center;
+      line-height: 1.2;
+    }
+    .tel span { color: var(--accent); font-size: 16px; }
+    .menu-button {
+      display: grid;
+      place-items: center;
+      border-left: 1px solid var(--line);
+      background: var(--ink);
+      color: var(--white);
+      font-size: 11px;
+    }
+    .menu-button i {
+      width: 26px;
+      height: 2px;
+      display: block;
+      background: currentColor;
+      box-shadow: 0 8px currentColor, 0 -8px currentColor;
+    }
+
+    .side-cta {
+      position: fixed;
+      z-index: 40;
+      right: 0;
+      top: 120px;
+      display: grid;
+      gap: 1px;
+    }
+    .side-cta a {
+      width: 58px;
+      min-height: 128px;
+      padding: 14px 10px;
+      display: grid;
+      place-items: center;
+      background: var(--white);
+      border: 1px solid var(--line);
+      writing-mode: vertical-rl;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .side-cta a:first-child { background: var(--accent); color: var(--white); border-color: var(--accent); }
+
+    .hero {
+      min-height: 100vh;
+      padding-top: 76px;
+      position: relative;
+      display: grid;
+      align-items: stretch;
+      overflow: hidden;
+      background: #1d1a16;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 76px 0 0;
+      background:
+        linear-gradient(90deg, rgba(0,0,0,.55), rgba(0,0,0,.1) 55%, rgba(0,0,0,.32)),
+        url("https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1800&q=85") center/cover;
+      transform: scale(1.02);
+    }
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      width: min(1340px, calc(100% - 64px));
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      align-items: end;
+      min-height: calc(100vh - 76px);
+      padding: 80px 0 64px;
+      color: var(--white);
+    }
+    .hero-copy {
+      max-width: 720px;
+      padding-bottom: 52px;
+    }
+    .eyebrow {
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .hero h1 {
+      margin: 18px 0 22px;
+      font-size: clamp(46px, 8vw, 104px);
+      line-height: .95;
+      font-weight: 900;
+    }
+    .hero p {
+      max-width: 560px;
+      margin: 0;
+      font-size: 17px;
+      font-weight: 700;
+    }
+    .hero-news {
+      align-self: end;
+      background: rgba(255,255,255,.92);
+      color: var(--ink);
+      padding: 24px;
+      border-top: 5px solid var(--accent);
+    }
+    .hero-news b { display: block; font-size: 22px; line-height: 1; margin-bottom: 12px; }
+    .hero-news time { color: var(--accent); font-weight: 800; font-size: 12px; }
+
+    section { padding: 92px 0; }
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(220px, 330px) 1fr;
+      gap: 54px;
+      align-items: end;
+      margin-bottom: 42px;
+    }
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(42px, 6vw, 86px);
+      line-height: .9;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+    .section-head p { margin: 0; color: var(--muted); font-weight: 700; }
+    .button {
+      display: inline-grid;
+      place-items: center;
+      min-height: 48px;
+      padding: 0 26px;
+      border: 1px solid var(--ink);
+      background: var(--ink);
+      color: var(--white);
+      font-weight: 800;
+      font-size: 13px;
+    }
+    .button.light { background: transparent; color: var(--ink); }
+
+    .reasons {
+      background: var(--white);
+    }
+    .reason-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      border-top: 1px solid var(--line);
+      border-left: 1px solid var(--line);
+    }
+    .reason {
+      min-height: 220px;
+      padding: 26px 20px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      display: grid;
+      align-content: space-between;
+    }
+    .reason strong { font-size: 42px; line-height: 1; color: var(--accent); }
+    .reason b { display: block; font-size: 16px; line-height: 1.5; }
+
+    .service-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+    .service-card {
+      min-height: 420px;
+      position: relative;
+      display: grid;
+      align-items: end;
+      overflow: hidden;
+      background: #ddd;
+    }
+    .service-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,.02), rgba(0,0,0,.68));
+    }
+    .service-card:nth-child(1) { background: url("https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=900&q=80") center/cover; }
+    .service-card:nth-child(2) { background: url("https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=900&q=80") center/cover; }
+    .service-card:nth-child(3) { background: url("https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?auto=format&fit=crop&w=900&q=80") center/cover; }
+    .service-card div {
+      position: relative;
+      z-index: 1;
+      padding: 28px;
+      color: var(--white);
+    }
+    .service-card h3 { margin: 0 0 10px; font-size: 26px; line-height: 1.35; }
+    .service-card p { margin: 0; font-weight: 700; }
+
+    .works { background: var(--soft); }
+    .works-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+    .work {
+      background: var(--white);
+      min-height: 310px;
+    }
+    .work figure { margin: 0; aspect-ratio: 4/3; overflow: hidden; }
+    .work div { padding: 18px; }
+    .work small { color: var(--accent); font-weight: 900; }
+    .work h3 { margin: 4px 0 6px; font-size: 20px; line-height: 1.2; }
+    .work p { margin: 0; color: var(--muted); font-size: 13px; font-weight: 700; }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 34px;
+    }
+    .tags a {
+      border: 1px solid var(--line);
+      background: var(--white);
+      padding: 10px 18px;
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .special-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    .special-card {
+      min-height: 180px;
+      display: grid;
+      align-content: space-between;
+      padding: 22px;
+      background: var(--white);
+      border: 1px solid var(--line);
+    }
+    .special-card b { font-size: 18px; line-height: 1.45; }
+    .special-card span { color: var(--accent); font-size: 12px; font-weight: 900; }
+
+    .news-events {
+      background: var(--ink);
+      color: var(--white);
+    }
+    .event-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .event {
+      min-height: 260px;
+      padding: 24px;
+      background: #2b2926;
+      border: 1px solid rgba(255,255,255,.15);
+      display: grid;
+      align-content: space-between;
+    }
+    .event time { color: #f2b6ad; font-weight: 900; }
+    .event h3 { margin: 18px 0 0; font-size: 18px; line-height: 1.5; }
+
+    .voice-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+    }
+    .voice-card {
+      min-height: 156px;
+      padding: 24px;
+      background: var(--white);
+    }
+    .voice-card time { color: var(--accent); font-weight: 900; font-size: 12px; }
+    .voice-card p { margin: 8px 0 0; font-weight: 700; }
+    .voice-card small { color: var(--muted); }
+
+    .contact-band {
+      padding: 70px 0;
+      background: var(--accent);
+      color: var(--white);
+      text-align: center;
+    }
+    .contact-band h2 { margin: 0 0 22px; font-size: clamp(42px, 7vw, 92px); line-height: .9; }
+    .contact-buttons {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .contact-buttons a {
+      min-width: 190px;
+      padding: 14px 20px;
+      background: var(--white);
+      color: var(--ink);
+      font-weight: 900;
+    }
+
+    .sns-yomimono {
+      display: grid;
+      grid-template-columns: .8fr 1.2fr;
+      gap: 48px;
+    }
+    .sns-panel {
+      padding: 34px;
+      background: var(--white);
+      border: 1px solid var(--line);
+    }
+    .socials {
+      display: flex;
+      gap: 10px;
+      margin: 20px 0;
+    }
+    .socials a {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      color: var(--ink);
+      transition: background .2s ease, color .2s ease, border-color .2s ease;
+    }
+    .socials a:hover {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: var(--white);
+    }
+    .socials svg {
+      width: 24px;
+      height: 24px;
+      fill: currentColor;
+    }
+    .article-list {
+      display: grid;
+      gap: 12px;
+    }
+    .article {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 18px;
+      padding: 12px;
+      background: var(--white);
+      border: 1px solid var(--line);
+    }
+    .article figure { margin: 0; aspect-ratio: 4/3; overflow: hidden; }
+    .article time { color: var(--accent); font-weight: 900; font-size: 12px; }
+    .article h3 { margin: 6px 0 0; font-size: 17px; line-height: 1.4; }
+
+    .about-shop {
+      background: var(--white);
+    }
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+    }
+    .feature {
+      min-height: 360px;
+      position: relative;
+      display: grid;
+      align-items: end;
+      overflow: hidden;
+      color: var(--white);
+    }
+    .feature::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,.05), rgba(0,0,0,.7));
+    }
+    .feature.about { background: url("https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=900&q=80") center/cover; }
+    .feature.shop { background: url("https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=900&q=80") center/cover; }
+    .feature div { position: relative; padding: 32px; }
+    .feature h2 { margin: 0 0 8px; font-size: 54px; line-height: .9; }
+
+    .sitemap-preview {
+      background: var(--soft);
+      border-top: 1px solid var(--line);
+    }
+    .sitemap-columns {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+    .sitemap-columns h3 { margin: 0 0 10px; font-size: 15px; }
+    .sitemap-columns ul { list-style: none; margin: 0; padding: 0; }
+    .sitemap-columns li { padding: 7px 0; border-bottom: 1px solid rgba(25,24,23,.1); font-size: 13px; font-weight: 700; color: var(--muted); }
+
+    .site-footer {
+      padding: 64px 0 100px;
+      background: var(--ink);
+      color: var(--white);
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 36px;
+    }
+    .footer-logo { font-size: 36px; font-weight: 900; line-height: 1; }
+    .site-footer p { color: #cfc8be; margin: 12px 0 0; }
+    .copyright { margin-top: 48px; color: #9d968d; font-size: 12px; }
+
+    .bottom-cta {
+      position: fixed;
+      z-index: 45;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      background: var(--white);
+      border-top: 1px solid var(--line);
+    }
+    .bottom-cta a {
+      min-height: 58px;
+      display: grid;
+      place-items: center;
+      border-right: 1px solid var(--line);
+      font-weight: 900;
+      font-size: 13px;
+    }
+    .bottom-cta a:last-child { background: var(--ink); color: var(--white); }
+
+    @media (max-width: 980px) {
+      .site-header { grid-template-columns: 170px 1fr 76px; }
+      .global-nav, .tel { display: none; }
+      .header-actions { grid-template-columns: 76px; justify-self: end; }
+      .hero-inner, .section-head, .sns-yomimono, .split { grid-template-columns: 1fr; }
+      .hero-inner { min-height: 760px; }
+      .hero-news { max-width: 420px; }
+      .reason-grid, .works-grid, .special-grid, .event-list, .sitemap-columns, .footer-grid { grid-template-columns: repeat(2, 1fr); }
+      .service-grid { grid-template-columns: 1fr; }
+      .side-cta { display: none; }
+    }
+
+    @media (max-width: 640px) {
+      .wrap, .hero-inner { width: min(100% - 28px, var(--max)); }
+      section { padding: 64px 0; }
+      .site-header { height: 64px; grid-template-columns: 1fr 64px; }
+      .brand { font-size: 22px; justify-content: start; padding-left: 14px; }
+      .header-actions { height: 64px; }
+      .hero { padding-top: 64px; }
+      .hero::before { inset: 64px 0 0; }
+      .hero-inner { min-height: 700px; padding: 44px 0 36px; }
+      .hero-copy { padding-bottom: 24px; }
+      .reason-grid, .works-grid, .special-grid, .event-list, .voice-grid, .sitemap-columns, .footer-grid { grid-template-columns: 1fr; }
+      .article { grid-template-columns: 110px 1fr; }
+      .bottom-cta { grid-template-columns: repeat(2, 1fr); }
+      .bottom-cta a { min-height: 52px; font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="password-gate" role="dialog" aria-labelledby="password-title" aria-modal="true">
+    <form class="password-card" id="password-form">
+      <h1 id="password-title">デモ閲覧</h1>
+      <p>パスワードを入力してください。</p>
+      <label for="demo-password">Password</label>
+      <div class="password-row">
+        <input id="demo-password" type="password" autocomplete="current-password" required>
+        <button type="submit">閲覧する</button>
+      </div>
+      <div class="password-error" id="password-error" aria-live="polite"></div>
+    </form>
+  </div>
+
+  <header class="site-header">
+    <a class="brand" href="#top">{{company}}<small>住まいのリノベーション</small></a>
+    <nav class="global-nav" aria-label="主要メニュー">
+      <a href="#service">SERVICE</a>
+      <a href="#works">WORKS</a>
+      <a href="#event">EVENT</a>
+      <a href="#yomimono">YOMIMONO</a>
+      <a href="#shop">SHOP</a>
+      <a href="#about">ABOUT</a>
+      <a href="#contact">CONTACT</a>
+    </nav>
+    <div class="header-actions">
+      <a class="tel" href="tel:0120860672">TEL <span>0120-860-672</span></a>
+      <a class="menu-button" href="#sitemap" aria-label="メニュー"><i></i><span>MENU</span></a>
+    </div>
+  </header>
+
+  <aside class="side-cta" aria-label="お問い合わせ">
+    <a href="#contact">リノベのご相談</a>
+    <a href="#contact">資料請求</a>
+    <a href="tel:0120860672">電話で相談</a>
+  </aside>
+
+  <main id="top">
+    <section class="hero" aria-label="メインビジュアル">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <div class="eyebrow">Design Renovation</div>
+          <h1>DRAMATIC<br>RENOVATION</h1>
+          <p>デザインリノベーションなら "{{company}}"。中古物件探しから、設計・施工、住んでからのサポートまで。</p>
+        </div>
+        <a class="hero-news" href="#event">
+          <b>NEWS</b>
+          <time>2026.04.12</time>
+          <p>全面リノベ済物件・イベント・見学会などの最新情報を掲載しています。</p>
+        </a>
+      </div>
+    </section>
+
+    <section class="reasons">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>5 Reasons</h2>
+          <p>{{company}}が選ばれる5つの理由。豊富な実績、寄り添う提案、自社設計施工、オーダーメイド家具、アフターサポート。</p>
+        </div>
+        <div class="reason-grid">
+          <article class="reason"><strong>01</strong><b>since 1998<br>豊富なリノベ実績</b></article>
+          <article class="reason"><strong>02</strong><b>お客様に寄り添う<br>パートナーシップ</b></article>
+          <article class="reason"><strong>03</strong><b>自社設計施工の<br>こだわり</b></article>
+          <article class="reason"><strong>04</strong><b>自社工場で家具製作<br>オーダーメイドを実現</b></article>
+          <article class="reason"><strong>05</strong><b>住んでからも安心<br>アフターサポート</b></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="service">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Service</h2>
+          <p>あなたのリノベーションは？目的別に迷わず相談へ進める入口を並べています。</p>
+        </div>
+        <div class="service-grid">
+          <a class="service-card" href="#contact"><div><h3>中古物件探しからの<br>リノベーション</h3><p>物件探し、資金計画、設計施工までワンストップ。</p></div></a>
+          <a class="service-card" href="#contact"><div><h3>所有・購入済み物件の<br>リノベーション</h3><p>暮らしに合わせて間取りと素材を再編集。</p></div></a>
+          <a class="service-card" href="#contact"><div><h3>法人さま向け<br>一棟リノベーション</h3><p>共同住宅や収益物件の再生もサポート。</p></div></a>
+        </div>
+      </div>
+    </section>
+
+    <section id="works" class="works">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Works</h2>
+          <p>施工事例。住まい方、家族構成、趣味、造作家具などの切り口で探せる構成です。</p>
+        </div>
+        <div class="works-grid">
+          <article class="work"><figure><img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=700&q=80" alt="リノベーション事例"></figure><div><small>WORKS.235</small><h3>Products</h3><p>築年数と個性を活かす、余白のある住まい。</p></div></article>
+          <article class="work"><figure><img src="https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=700&q=80" alt="リノベーション事例"></figure><div><small>WORKS.234</small><h3>Progress</h3><p>暮らしながら育つ、素材感のある空間。</p></div></article>
+          <article class="work"><figure><img src="https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=700&q=80" alt="リノベーション事例"></figure><div><small>WORKS.233</small><h3>New Chapter</h3><p>家族の新しい章を迎えるリビング。</p></div></article>
+          <article class="work"><figure><img src="https://images.unsplash.com/photo-1600566752355-35792bedcfea?auto=format&fit=crop&w=700&q=80" alt="リノベーション事例"></figure><div><small>WORKS.228</small><h3>Keep Updating</h3><p>更新し続ける暮らしのための設計。</p></div></article>
+        </div>
+        <div class="tags" aria-label="暮らしのポイント">
+          <a href="#">ペット</a><a href="#">子育て</a><a href="#">趣味</a><a href="#">ひとり暮らし</a><a href="#">リモートワーク</a><a href="#">造作家具</a>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Special<br>Contents</h2>
+          <p>よく見られている人気コンテンツを、カード状の導線として配置しています。</p>
+        </div>
+        <div class="special-grid">
+          <a class="special-card" href="#"><b>中古物件情報</b><span>READ MORE +</span></a>
+          <a class="special-card" href="#"><b>猫・犬リノベ</b><span>READ MORE +</span></a>
+          <a class="special-card" href="#"><b>ひとり暮らし</b><span>READ MORE +</span></a>
+          <a class="special-card" href="#"><b>50代からのふたり暮らし</b><span>READ MORE +</span></a>
+          <a class="special-card" href="#"><b>無料FP相談</b><span>READ MORE +</span></a>
+          <a class="special-card" href="#"><b>補助金情報</b><span>READ MORE +</span></a>
+          <a class="special-card" href="#"><b>ふんわり相談</b><span>READ MORE +</span></a>
+          <a class="special-card" href="#"><b>部分集中リノベ</b><span>READ MORE +</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section id="event" class="news-events">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>News &<br>Event</h2>
+          <p>見学会、相談会、ニュースを横断して掲載するエリア。</p>
+        </div>
+        <div class="event-list">
+          <article class="event"><time>2026.05.31</time><h3>江戸川区西一之江・解体現場見学会（完全予約制）</h3><span>ALL +</span></article>
+          <article class="event"><time>2026.06.06-07</time><h3>浦安市高洲・リノベーション完成現場見学会</h3><span>ALL +</span></article>
+          <article class="event"><time>毎営業日開催</time><h3>はじめてさんのための「ふんわり相談会」</h3><span>ALL +</span></article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Voice</h2>
+          <p>アンケートや取材時のお施主様の声を集めるセクション。</p>
+        </div>
+        <div class="voice-grid">
+          <article class="voice-card"><time>2026-04-09</time><p>丁寧に細かくケアいただいたことで、安心感が生まれました。</p><small>東京都 | ひとり暮らし</small></article>
+          <article class="voice-card"><time>2026-03-31</time><p>意図を汲んでくださり、理想のイメージに近づきました。</p><small>東京都 | ひとり暮らし</small></article>
+          <article class="voice-card"><time>2026-02-09</time><p>古い物件でも相談しながら納得して進められました。</p><small>東京都 | ファミリー</small></article>
+          <article class="voice-card"><time>2026-01-20</time><p>言語化できないイメージを形にしてもらえました。</p><small>千葉県 | ファミリー</small></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="contact-band">
+      <div class="wrap">
+        <h2>Contact</h2>
+        <p>お気軽にお問い合わせください</p>
+        <div class="contact-buttons">
+          <a href="#">リノベのご相談</a>
+          <a href="#">物件探しのご相談</a>
+          <a href="#">一棟リノベーション</a>
+          <a href="#">FP相談</a>
+          <a href="#">資料請求</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="yomimono">
+      <div class="wrap sns-yomimono">
+        <div class="sns-panel">
+          <div class="section-head" style="display:block;margin-bottom:0">
+            <h2>SNS</h2>
+            <p>{{company}} 公式SNSアカウント</p>
+          </div>
+          <div class="socials">
+            <a href="#" aria-label="YouTube">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.6 7.2a3 3 0 0 0-2.1-2.1C17.6 4.6 12 4.6 12 4.6s-5.6 0-7.5.5a3 3 0 0 0-2.1 2.1A31.2 31.2 0 0 0 2 12a31.2 31.2 0 0 0 .4 4.8 3 3 0 0 0 2.1 2.1c1.9.5 7.5.5 7.5.5s5.6 0 7.5-.5a3 3 0 0 0 2.1-2.1A31.2 31.2 0 0 0 22 12a31.2 31.2 0 0 0-.4-4.8ZM10 15.3V8.7l5.8 3.3L10 15.3Z"/></svg>
+            </a>
+            <a href="#" aria-label="Facebook">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.1 8.3V6.9c0-.7.5-.9 1-.9h2.2V2.2L14.2 2c-3.5 0-5.4 2.1-5.4 5.8v.5H5.3v4.3h3.5V22h4.4v-9.4h3.5l.6-4.3h-4.1Z"/></svg>
+            </a>
+            <a href="#" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.3 2h9.4A5.3 5.3 0 0 1 22 7.3v9.4a5.3 5.3 0 0 1-5.3 5.3H7.3A5.3 5.3 0 0 1 2 16.7V7.3A5.3 5.3 0 0 1 7.3 2Zm0 2A3.3 3.3 0 0 0 4 7.3v9.4A3.3 3.3 0 0 0 7.3 20h9.4a3.3 3.3 0 0 0 3.3-3.3V7.3A3.3 3.3 0 0 0 16.7 4H7.3Zm4.7 3.4A4.6 4.6 0 1 1 7.4 12 4.6 4.6 0 0 1 12 7.4Zm0 2A2.6 2.6 0 1 0 14.6 12 2.6 2.6 0 0 0 12 9.4Zm5-2.5a1.1 1.1 0 1 1-1.1 1.1A1.1 1.1 0 0 1 17 6.9Z"/></svg>
+            </a>
+            <a href="#" aria-label="Pinterest">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.2 2C6.6 2 3.8 6 3.8 9.4c0 2.1.8 4 2.5 4.7.3.1.5 0 .6-.3l.2-.9c.1-.3.1-.4-.2-.7a3.2 3.2 0 0 1-.8-2.3c0-3 2.2-5.7 5.8-5.7 3.2 0 4.9 1.9 4.9 4.5 0 3.4-1.5 6.3-3.8 6.3-1.2 0-2.2-1-1.9-2.3.4-1.5 1.1-3.1 1.1-4.2 0-1-.5-1.8-1.6-1.8-1.2 0-2.2 1.3-2.2 3 0 1.1.4 1.8.4 1.8l-1.5 6.3c-.4 1.9-.1 4.1 0 4.3l.2.1c.2-.2 2.4-3 2.8-4.8l.8-3.1a3.4 3.4 0 0 0 2.9 1.5c3.8 0 6.4-3.5 6.4-8.1C20.4 5.2 17.4 2 12.2 2Z"/></svg>
+            </a>
+          </div>
+          <p>ルームツアー動画や施工事例、店舗情報を配信中。</p>
+        </div>
+        <div>
+          <div class="section-head" style="display:block;margin-bottom:24px">
+            <h2>Yomimono</h2>
+            <p>ブログ・コラム</p>
+          </div>
+          <div class="article-list">
+            <article class="article"><figure><img src="https://images.unsplash.com/photo-1600210491369-e753d80a41f3?auto=format&fit=crop&w=500&q=80" alt="記事画像"></figure><div><time>2026.05.20</time><h3>リノベーションで耐震性は高まる？判断ポイントを解説</h3></div></article>
+            <article class="article"><figure><img src="https://images.unsplash.com/photo-1600607688066-890987f18a86?auto=format&fit=crop&w=500&q=80" alt="記事画像"></figure><div><time>2026.05.17</time><h3>住宅ローン変動金利はどこまで上がる？</h3></div></article>
+            <article class="article"><figure><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 375'%3E%3Crect width='500' height='375' fill='%23ece6dd'/%3E%3Cpath d='M55 286h390V118L250 44 55 118v168Z' fill='%23f7f4ee' stroke='%23191817' stroke-width='10'/%3E%3Cpath d='M112 286V145h276v141' fill='none' stroke='%23b62222' stroke-width='10'/%3E%3Cpath d='M146 174h208M146 215h208M146 256h208' stroke='%236f7868' stroke-width='12' stroke-linecap='round'/%3E%3Cpath d='M250 44v74M55 118h390' stroke='%23191817' stroke-width='8'/%3E%3Ccircle cx='392' cy='70' r='28' fill='%23c8baaa'/%3E%3Cpath d='M365 309h70' stroke='%23b62222' stroke-width='12' stroke-linecap='round'/%3E%3C/svg%3E" alt="耐震・断熱リフォームの費用相場"></figure><div><time>2026.05.13</time><h3>耐震・断熱リフォームの費用相場</h3></div></article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="about-shop">
+      <div class="wrap split">
+        <a class="feature about" href="#"><div><h2>About</h2><p>{{company}}って？</p></div></a>
+        <a id="shop" class="feature shop" href="#"><div><h2>Shop</h2><p>浦安店・世田谷店・青山店</p></div></a>
+      </div>
+    </section>
+
+    <section id="sitemap" class="sitemap-preview">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Site Map</h2>
+          <p>公式サイトのグローバルナビとサイトマップページから主要階層を整理。</p>
+        </div>
+        <div class="sitemap-columns">
+          <div><h3>SERVICE</h3><ul><li>3つのサービス</li><li>こだわり</li><li>しないこと</li><li>リノベーションの流れ</li></ul></div>
+          <div><h3>WORKS</h3><ul><li>リノベーション事例</li><li>お客様インタビュー</li><li>ペット</li><li>造作家具</li></ul></div>
+          <div><h3>EVENT / YOMIMONO</h3><ul><li>イベント</li><li>ニュース</li><li>プレス</li><li>ブログ・コラム</li></ul></div>
+          <div><h3>ABOUT / SHOP</h3><ul><li>代表メッセージ</li><li>スタッフ</li><li>会社概要</li><li>浦安・世田谷・青山</li></ul></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-grid">
+      <div>
+        <div class="footer-logo">{{company}}</div>
+        <p>住宅リノベーション部</p>
+      </div>
+      <div>
+        <p>URAYASU<br>〒279-0003 千葉県浦安市海楽2-5-35<br>TEL：047-304-5827</p>
+      </div>
+      <div>
+        <p>SETAGAYA / AOYAMA<br>営業時間：9:00~18:00<br>定休日：水・木</p>
+      </div>
+    </div>
+    <div class="wrap copyright">© 2026 {{company}} All Rights Reserved.</div>
+  </footer>
+
+  <nav class="bottom-cta" aria-label="固定お問い合わせ">
+    <a href="#contact">資料請求</a>
+    <a href="#contact">リノベのご相談</a>
+    <a href="#contact">物件探しのご相談</a>
+    <a href="tel:0120860672">電話で相談</a>
+  </nav>
+  <script>
+    (function () {
+      var passwordHash = "f2f0287026ba2bf5786c300a90041df3d385d321eb45a962e867d54eba60b7d3";
+      var form = document.getElementById("password-form");
+      var input = document.getElementById("demo-password");
+      var error = document.getElementById("password-error");
+
+      function toHex(buffer) {
+        return Array.prototype.map.call(new Uint8Array(buffer), function (byte) {
+          return byte.toString(16).padStart(2, "0");
+        }).join("");
+      }
+
+      async function digest(value) {
+        var data = new TextEncoder().encode(value);
+        var hash = await crypto.subtle.digest("SHA-256", data);
+        return toHex(hash);
+      }
+
+      if (!document.documentElement.classList.contains("auth-locked")) return;
+      input.focus();
+
+      form.addEventListener("submit", async function (event) {
+        event.preventDefault();
+        error.textContent = "";
+        if (!window.crypto || !crypto.subtle) {
+          error.textContent = "このブラウザでは認証機能を利用できません。";
+          return;
+        }
+        var enteredHash = await digest(input.value.trim());
+        if (enteredHash === passwordHash) {
+          try {
+            sessionStorage.setItem("demo-authenticated", "true");
+          } catch (storageError) {}
+          document.documentElement.classList.remove("auth-locked");
+          input.value = "";
+        } else {
+          error.textContent = "パスワードが違います。";
+          input.select();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
