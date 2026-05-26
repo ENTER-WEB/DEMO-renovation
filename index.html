@@ -264,15 +264,40 @@
       border-left: 1px solid var(--line);
     }
     .reason {
-      min-height: 220px;
+      min-height: 270px;
+      position: relative;
       padding: 26px 20px;
       border-right: 1px solid var(--line);
       border-bottom: 1px solid var(--line);
       display: grid;
       align-content: space-between;
+      overflow: hidden;
+      background: var(--ink) center/cover;
+      color: var(--white);
     }
-    .reason strong { font-size: 42px; line-height: 1; color: var(--accent); }
+    .reason::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.72));
+    }
+    .reason strong,
+    .reason b {
+      position: relative;
+      z-index: 1;
+    }
+    .reason strong {
+      font-size: 42px;
+      line-height: 1;
+      color: rgba(255,255,255,.5);
+      text-shadow: 0 1px 12px rgba(0,0,0,.34);
+    }
     .reason b { display: block; font-size: 16px; line-height: 1.5; }
+    .reason:nth-child(1) { background-image: url("assets/reason-01.png"); }
+    .reason:nth-child(2) { background-image: url("assets/reason-02.png"); }
+    .reason:nth-child(3) { background-image: url("assets/reason-03.png"); }
+    .reason:nth-child(4) { background-image: url("assets/reason-04.png"); }
+    .reason:nth-child(5) { background-image: url("assets/reason-05.png"); }
 
     .service-grid {
       display: grid;
@@ -341,15 +366,37 @@
       gap: 12px;
     }
     .special-card {
-      min-height: 180px;
+      min-height: 220px;
+      position: relative;
       display: grid;
       align-content: space-between;
       padding: 22px;
-      background: var(--white);
+      overflow: hidden;
+      background: var(--ink) center/cover;
       border: 1px solid var(--line);
+      color: var(--white);
+    }
+    .special-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,.16), rgba(0,0,0,.72));
+    }
+    .special-card b,
+    .special-card span {
+      position: relative;
+      z-index: 1;
     }
     .special-card b { font-size: 18px; line-height: 1.45; }
-    .special-card span { color: var(--accent); font-size: 12px; font-weight: 900; }
+    .special-card span { color: #fff; font-size: 12px; font-weight: 900; }
+    .special-card:nth-child(1) { background-image: url("assets/special-property.png"); }
+    .special-card:nth-child(2) { background-image: url("assets/special-pets.png"); }
+    .special-card:nth-child(3) { background-image: url("assets/special-single.png"); }
+    .special-card:nth-child(4) { background-image: url("assets/special-couple50.png"); }
+    .special-card:nth-child(5) { background-image: url("assets/special-fp.png"); }
+    .special-card:nth-child(6) { background-image: url("assets/special-subsidy.png"); }
+    .special-card:nth-child(7) { background-image: url("assets/special-consultation.png"); }
+    .special-card:nth-child(8) { background-image: url("assets/special-partial.png"); }
 
     .news-events {
       background: var(--ink);
