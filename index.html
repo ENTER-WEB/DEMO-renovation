@@ -102,10 +102,15 @@
       gap: 13px;
       min-height: 76px;
       border-left: 1px solid var(--line);
+      border-top: 0;
+      border-right: 0;
+      border-bottom: 0;
       background: var(--ink);
       color: var(--white);
+      font: inherit;
       font-size: 11px;
       line-height: 1;
+      cursor: pointer;
     }
     .menu-button i {
       width: 26px;
@@ -115,7 +120,74 @@
       background: currentColor;
       box-shadow: 0 8px currentColor, 0 -8px currentColor;
     }
-
+    .mega-menu {
+      position: fixed;
+      z-index: 49;
+      left: 0;
+      right: 0;
+      top: 76px;
+      max-height: 0;
+      overflow: hidden;
+      background: rgba(247,244,238,.98);
+      border-bottom: 1px solid rgba(25,24,23,.1);
+      box-shadow: 0 26px 80px rgba(25,24,23,.18);
+      transition: max-height .34s ease;
+    }
+    body.menu-open .mega-menu {
+      max-height: 420px;
+    }
+    .mega-menu__inner {
+      width: min(var(--max), calc(100% - 48px));
+      margin: 0 auto;
+      padding: 22px 0 26px;
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .mega-card {
+      position: relative;
+      min-height: 170px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      overflow: hidden;
+      color: var(--white);
+      background: var(--ink) center/cover;
+    }
+    .mega-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.72));
+    }
+    .mega-card b,
+    .mega-card span {
+      position: relative;
+      z-index: 1;
+    }
+    .mega-card b {
+      font-size: 16px;
+      line-height: 1;
+      font-weight: 900;
+    }
+    .mega-card span {
+      margin-top: 9px;
+      color: rgba(255,255,255,.82);
+      font-size: 11px;
+      font-weight: 800;
+      line-height: 1.5;
+    }
+    .mega-card.service { background-image: url("assets/service-renovation.jpg"); }
+    .mega-card.works { background-image: url("assets/work-products.jpg"); }
+    .mega-card.event-card {
+      background-image: url("assets/special-consultation.png");
+      background-position: center;
+    }
+    .mega-card.yomimono { background-image: url("assets/article-seismic.jpg"); }
+    .mega-card.shop { background-image: url("assets/shop-interior.jpg"); }
+    .mega-card.about { background-image: url("assets/about-office.jpg"); }
+    .mega-card.contact { background-image: url("assets/special-fp.png"); }
     .side-cta {
       position: fixed;
       z-index: 40;
@@ -584,6 +656,9 @@
       .site-header { grid-template-columns: 170px 1fr 76px; }
       .global-nav, .tel { display: none; }
       .header-actions { grid-template-columns: 76px; justify-self: end; }
+      body.menu-open .mega-menu { max-height: 680px; }
+      .mega-menu__inner { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .mega-card { min-height: 138px; }
       .hero-inner, .sns-yomimono, .split { grid-template-columns: 1fr; }
       .hero-inner { min-height: 760px; }
       .hero-news { max-width: 420px; }
@@ -599,6 +674,14 @@
       .brand { font-size: 22px; justify-content: start; padding-left: 14px; }
       .header-actions { height: 64px; }
       .menu-button { min-height: 64px; gap: 11px; }
+      .mega-menu { top: 64px; }
+      .mega-menu__inner {
+        width: min(100% - 28px, var(--max));
+        grid-template-columns: 1fr;
+        padding: 14px 0 18px;
+      }
+      .mega-card { min-height: 104px; }
+      body.menu-open .mega-menu { max-height: calc(100vh - 64px); overflow-y: auto; }
       .section-head h2 {
         white-space: normal;
         font-size: clamp(38px, 13vw, 58px);
@@ -630,9 +713,21 @@
     </nav>
     <div class="header-actions">
       <a class="tel" href="tel:0120860672">TEL <span>0120-860-672</span></a>
-      <a class="menu-button" href="#sitemap" aria-label="メニュー"><i></i><span>MENU</span></a>
+      <button class="menu-button" type="button" aria-label="メニューを開く" aria-expanded="false" aria-controls="mega-menu"><i></i><span>MENU</span></button>
     </div>
   </header>
+
+  <nav class="mega-menu" id="mega-menu" aria-label="カードメニュー">
+    <div class="mega-menu__inner">
+      <a class="mega-card service" href="#service"><b>SERVICE</b><span>目的別に選べるリノベーション相談</span></a>
+      <a class="mega-card works" href="#works"><b>WORKS</b><span>施工事例と暮らしのアイデア</span></a>
+      <a class="mega-card event-card" href="#event"><b>EVENT</b><span>見学会・相談会・最新ニュース</span></a>
+      <a class="mega-card yomimono" href="#yomimono"><b>YOMIMONO</b><span>住まいづくりの読み物とコラム</span></a>
+      <a class="mega-card shop" href="#shop"><b>SHOP</b><span>浦安・世田谷・青山の店舗情報</span></a>
+      <a class="mega-card about" href="#about"><b>ABOUT</b><span>{{company}}のこだわりと会社情報</span></a>
+      <a class="mega-card contact" href="#contact"><b>CONTACT</b><span>資料請求・相談予約はこちら</span></a>
+    </div>
+  </nav>
 
   <aside class="side-cta" aria-label="お問い合わせ">
     <a href="#contact">リノベのご相談</a>
@@ -851,5 +946,32 @@
     <a href="#contact">物件探しのご相談</a>
     <a href="tel:0120860672">電話で相談</a>
   </nav>
+  <script>
+    (function () {
+      var button = document.querySelector(".menu-button");
+      var menu = document.getElementById("mega-menu");
+      if (!button || !menu) return;
+
+      function setOpen(open) {
+        document.body.classList.toggle("menu-open", open);
+        button.setAttribute("aria-expanded", open ? "true" : "false");
+        button.setAttribute("aria-label", open ? "メニューを閉じる" : "メニューを開く");
+      }
+
+      button.addEventListener("click", function () {
+        setOpen(!document.body.classList.contains("menu-open"));
+      });
+
+      menu.querySelectorAll("a").forEach(function (link) {
+        link.addEventListener("click", function () {
+          setOpen(false);
+        });
+      });
+
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") setOpen(false);
+      });
+    })();
+  </script>
 </body>
 </html>
