@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 375" role="img" aria-labelledby="title desc">
+  <title id="title">耐震・断熱リフォームの費用相場</title>
+  <desc id="desc">住宅の耐震補強と断熱改修を表す記事サムネイル</desc>
+  <rect width="500" height="375" fill="#ece6dd"/>
+  <path d="M55 286h390V118L250 44 55 118v168Z" fill="#f7f4ee" stroke="#191817" stroke-width="10"/>
+  <path d="M112 286V145h276v141" fill="none" stroke="#b62222" stroke-width="10"/>
+  <path d="M146 174h208M146 215h208M146 256h208" stroke="#6f7868" stroke-width="12" stroke-linecap="round"/>
+  <path d="M250 44v74M55 118h390" stroke="#191817" stroke-width="8"/>
+  <circle cx="392" cy="70" r="28" fill="#c8baaa"/>
+  <path d="M365 309h70" stroke="#b62222" stroke-width="12" stroke-linecap="round"/>
+  <rect x="86" y="304" width="154" height="34" rx="17" fill="#191817"/>
+  <text x="163" y="327" text-anchor="middle" fill="#f7f4ee" font-family="Arial, sans-serif" font-size="18" font-weight="700">COST</text>
+</svg>
